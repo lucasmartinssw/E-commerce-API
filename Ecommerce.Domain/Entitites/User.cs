@@ -1,0 +1,11 @@
+﻿namespace Ecommerce.Domain.Entitites
+{
+    internal class User
+    {
+        public long Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty; 
+        public string Telephone { get; set; } = string.Empty;
+    }
+}
