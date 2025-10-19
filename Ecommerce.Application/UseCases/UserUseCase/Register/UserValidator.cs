@@ -2,7 +2,7 @@
 using Ecommerce.Communication.Requests;
 using FluentValidation;
 
-namespace Ecommerce.Application.UseCases.User.Register;
+namespace Ecommerce.Application.UseCases.UserUseCase.Register;
 
 public class UserValidator : AbstractValidator<RequestRegisterUserJson>
 {
@@ -13,4 +13,4 @@ public class UserValidator : AbstractValidator<RequestRegisterUserJson>
         RuleFor(user => user.Telephone).NotEmpty().WithMessage("O telefone é obrigatório.");
         RuleFor(user => user.Password).MinimumLength(6).WithMessage("A senha deve ter no mínimo 6 caracteres.");
     }
-}
+}   
