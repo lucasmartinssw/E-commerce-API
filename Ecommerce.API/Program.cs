@@ -3,13 +3,16 @@ using Ecommerce.Application.Security.Token;
 using Ecommerce.Application.UseCases.Products.Create;
 using Ecommerce.Application.UseCases.UserUseCase.Login;
 using Ecommerce.Application.UseCases.UserUseCase.Register;
+using Ecommerce.Application.UseCases.Categories.Create;
+using Ecommerce.Application.UseCases.UserUseCase.GetAll;
+using Ecommerce.Application.UseCases.Categories.GetAll;
+using Ecommerce.Application.UseCases.Categories.Delete;
 using Ecommerce.Domain.Repositories;
 using Ecommerce.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Ecommerce.Application.UseCases.UserUseCase.GetAll;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +34,9 @@ builder.Services.AddScoped<RegisterUserUseCase>();
 builder.Services.AddScoped<LoginUseCase>();
 builder.Services.AddScoped<CreateProductUseCase>();
 builder.Services.AddScoped<GetAllUsersUseCase>();
+builder.Services.AddScoped<CreateCategoryUseCase>();
+builder.Services.AddScoped<GetAllCategoriesUseCase>();
+builder.Services.AddScoped<DeleteCategoryUseCase>();
 
 
 // Configurações da API (Controllers e Swagger)
