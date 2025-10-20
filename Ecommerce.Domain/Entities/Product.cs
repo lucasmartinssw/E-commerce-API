@@ -1,5 +1,4 @@
-﻿// Ecommerce.Domain/Entities/Product.cs
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Ecommerce.Domain.Entities;

@@ -14,21 +14,20 @@ namespace Ecommerce.Application.UseCases.UserUseCase.Login;
 public class LoginUseCase
 {
     private readonly IUserRepository _repository;
+    private readonly JwtTokenGenerator _tokenGenerator;
 
-    public LoginUseCase(IUserRepository repository)
+    public LoginUseCase(IUserRepository repository, JwtTokenGenerator tokenGenerator)
     {
         _repository = repository;
+        _tokenGenerator = tokenGenerator;
     }
 
     public async Task<ResponseRegisteredUserJson> Execute(RequestLoginUserJson request)
     {
-        // 1. [MUDANÇA] Validar a requisição usando o FluentValidation
         Validate(request);
 
-        // 2. Buscar o usuário no banco
         var user = await _repository.GetByEmail(request.Email);
 
-        // 3. Verificar a senha
         var passwordEncryptor = new PasswordEncryptor();
         bool passwordMatch = false;
 
@@ -37,15 +36,15 @@ public class LoginUseCase
             passwordMatch = passwordEncryptor.Verify(request.Password, user.Password);
         }
 
-        // 4. Se o usuário não existir OU a senha não bater, retorne o mesmo erro
+       
         if (user == null || !passwordMatch)
         {
             throw new ValidationErrorsException(new List<string> { "Credenciais inválidas." });
         }
 
-        // 5. Se deu tudo certo, gere o token
-        var tokenGenerator = new JwtTokenGenerator();
-        var token = tokenGenerator.GenerateToken(user.Email);
+
+
+        var token = _tokenGenerator.GenerateToken(user.Email, user.Role.ToString());
 
         return new ResponseRegisteredUserJson
         {
@@ -53,7 +52,6 @@ public class LoginUseCase
         };
     }
 
-    // 6. [NOVO MÉTODO] Adicione este método privado à classe
     private void Validate(RequestLoginUserJson request)
     {
         var validator = new LoginValidator();

@@ -1,6 +1,8 @@
 ﻿using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace Ecommerce.Infrastructure.DataAccess;
 public class UserRepository : IUserRepository
@@ -26,6 +28,11 @@ public class UserRepository : IUserRepository
     public async Task<User> GetByEmail(string email)
     {
         return await _context.Users.AsNoTracking().FirstOrDefaultAsync(user => user.Email.Equals(email));
+    }
+
+    public async Task<List<User>> GetAll()
+    {
+        return await _context.Users.AsNoTracking().ToListAsync();
     }
 
 }

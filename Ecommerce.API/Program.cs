@@ -1,34 +1,104 @@
 using Ecommerce.API.Middleware;
+using Ecommerce.Application.Security.Token;
+using Ecommerce.Application.UseCases.Products.Create;
+using Ecommerce.Application.UseCases.UserUseCase.Login;
 using Ecommerce.Application.UseCases.UserUseCase.Register;
-using Ecommerce.Infrastructure.DataAccess;
-using Microsoft.EntityFrameworkCore;
 using Ecommerce.Domain.Repositories;
 using Ecommerce.Infrastructure.DataAccess;
-using Ecommerce.Application.UseCases.UserUseCase.Login;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Ecommerce.Application.UseCases.UserUseCase.GetAll;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// --- Adiciona serviços ao container ---
+
+// Configurações de Infraestrutura (Banco de Dados e Repositórios)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<EcommerceDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>(); 
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
-// Add Caso de Uso ao container de injeção de dependência
+// Configurações da Aplicação (Casos de Uso e Segurança)
+builder.Services.AddSingleton<JwtTokenGenerator>();
 builder.Services.AddScoped<RegisterUserUseCase>();
 builder.Services.AddScoped<LoginUseCase>();
+builder.Services.AddScoped<CreateProductUseCase>();
+builder.Services.AddScoped<GetAllUsersUseCase>();
+
+
+// Configurações da API (Controllers e Swagger)
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Insira o token JWT desta maneira: Bearer SEU_TOKEN"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
+// Configuração de Autenticação (JWT)
+var securityKey = builder.Configuration.GetSection("Jwt:SecurityKey").Value;
+var symmetricKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(securityKey!));
+
+builder.Services.AddAuthentication(auth =>
+{
+    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(bearer =>
+{
+    bearer.RequireHttpsMetadata = false;
+    bearer.SaveToken = true;
+    bearer.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = symmetricKey,
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("admin"));
+});
+
+// --- Fim da adição de serviços ---
 
 var app = builder.Build();
 
-// Add o nosso middleware para tratar exceções de forma global
+// --- Configura o pipeline de requisições HTTP ---
+
+// O middleware de exceção deve vir primeiro
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -37,6 +107,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllers();

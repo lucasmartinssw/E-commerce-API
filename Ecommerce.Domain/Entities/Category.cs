@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Ecommerce.Domain.Entities;
+﻿namespace Ecommerce.Domain.Entities;
 
 public class Category
 {

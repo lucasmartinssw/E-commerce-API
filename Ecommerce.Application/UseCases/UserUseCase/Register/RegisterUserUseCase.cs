@@ -15,22 +15,23 @@ namespace Ecommerce.Application.UseCases.UserUseCase.Register;
 public class RegisterUserUseCase
 {
     private readonly IUserRepository _repository;
-
-    public RegisterUserUseCase(IUserRepository repository)
+    private readonly JwtTokenGenerator _tokenGenerator;
+    public RegisterUserUseCase(IUserRepository repository, JwtTokenGenerator tokenGenerator)
     {
         _repository = repository;
+        _tokenGenerator = tokenGenerator;
     }
 
     public async Task<ResponseRegisteredUserJson> Execute(RequestRegisterUserJson request)
     {
-        // 4. Validação (continua igual)
+       
         Validate(request);
 
-        // 5. [NOVO] Verifica se o e-mail já existe no banco
+     
         var userWithSameEmail = await _repository.ExistsUserWithEmail(request.Email);
         if (userWithSameEmail)
         {
-            // Lança um erro de validação específico
+          
             throw new ValidationErrorsException(new List<string> { "Este e-mail já está em uso." });
         }
 
@@ -47,14 +48,11 @@ public class RegisterUserUseCase
             Password = hashedPassword
         };
 
-        // 8. [TODO CORRIGIDO] Salvar o usuário no banco
+       
         await _repository.Add(user);
 
-        // 9. [TODO CORRIGIDO] Gerar o token de autenticação
-        var tokenGenerator = new JwtTokenGenerator();
-        var token = tokenGenerator.GenerateToken(user.Email);
+        var token = _tokenGenerator.GenerateToken(user.Email, user.Role.ToString());
 
-        // 10. Retorna a resposta final com o token
         return new ResponseRegisteredUserJson
         {
             Token = token
