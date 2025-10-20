@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Application.UseCases.Categories.Create;
 using Ecommerce.Application.UseCases.Categories.Delete;
+using Ecommerce.Application.UseCases.Categories.Update;
 using Ecommerce.Communication.Requests;
 using Ecommerce.Communication.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,19 @@ public class AdminCategoriesController : ControllerBase
         await useCase.Execute(id);
 
       
+        return NoContent();
+    }
+
+    [HttpPut("{id:long}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateCategory(
+        [FromServices] UpdateCategoryUseCase useCase,
+        [FromRoute] long id,
+        [FromBody] RequestUpdateCategoryJson request) 
+    {
+        await useCase.Execute(id, request);
         return NoContent();
     }
 }

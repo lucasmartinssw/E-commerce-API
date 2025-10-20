@@ -12,4 +12,7 @@ public interface ICategoryRepository {
     Task<Category?> GetById(long id);
     Task<bool> IsInUse(long id);
     Task Delete(Category category);
+    Task<bool> ExistsByNameExcludingId(string name, long categoryId);
+    Task<bool> ExistsBySlugExcludingId(string slug, long categoryId);
+    Task Update(Category category);
 }

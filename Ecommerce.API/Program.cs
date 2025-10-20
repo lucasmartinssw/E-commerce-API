@@ -7,6 +7,7 @@ using Ecommerce.Application.UseCases.Categories.Create;
 using Ecommerce.Application.UseCases.UserUseCase.GetAll;
 using Ecommerce.Application.UseCases.Categories.GetAll;
 using Ecommerce.Application.UseCases.Categories.Delete;
+using Ecommerce.Application.UseCases.Categories.Update;
 using Ecommerce.Domain.Repositories;
 using Ecommerce.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,6 +38,7 @@ builder.Services.AddScoped<GetAllUsersUseCase>();
 builder.Services.AddScoped<CreateCategoryUseCase>();
 builder.Services.AddScoped<GetAllCategoriesUseCase>();
 builder.Services.AddScoped<DeleteCategoryUseCase>();
+builder.Services.AddScoped<UpdateCategoryUseCase>();
 
 
 // Configurações da API (Controllers e Swagger)

@@ -50,4 +50,22 @@ public class CategoryRepository : ICategoryRepository
         _context.Categories.Remove(category);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<bool> ExistsByNameExcludingId(string name, long categoryId)
+    {
+        return await _context.Categories
+            .AnyAsync(c => c.Name.Equals(name) && c.Id != categoryId);
+    }
+
+    public async Task<bool> ExistsBySlugExcludingId(string slug, long categoryId)
+    {
+        return await _context.Categories
+            .AnyAsync(c => c.Slug.Equals(slug) && c.Id != categoryId);
+    }
+
+    public async Task Update(Category category)
+    {
+        _context.Categories.Update(category);
+        await _context.SaveChangesAsync();
+    }
 }
