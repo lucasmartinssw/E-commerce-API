@@ -6,6 +6,7 @@ using Ecommerce.Application.UseCases.UserUseCase.UpdateProfile;
 using Ecommerce.Application.UseCases.Addresses.AddByCep;
 using Ecommerce.Application.UseCases.Addresses.GetAll;
 using Ecommerce.Application.UseCases.Addresses.Update;
+using Ecommerce.Application.UseCases.Addresses.Delete;
 using Ecommerce.Communication.Requests;
 using Ecommerce.Communication.Responses;
 using Ecommerce.Exceptions;
@@ -140,6 +141,23 @@ public class UserController : ControllerBase
 
         
         await useCase.Execute(userEmail!, id, request);
+
+        return NoContent();
+    }
+
+    [HttpDelete("me/addresses/{id:long}")] 
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)] 
+    [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)] 
+    [ProducesResponseType(typeof(object), StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> DeleteMyAddress(
+        [FromServices] DeleteAddressUseCase useCase,
+        [FromRoute] long id)
+    {
+        
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+
+        await useCase.Execute(userEmail!, id);
 
         return NoContent();
     }

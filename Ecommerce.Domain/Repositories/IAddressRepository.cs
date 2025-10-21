@@ -9,4 +9,5 @@ public interface IAddressRepository
     Task<List<Address>> GetAllByUserId(long userId);
     Task<Address?> GetById(long id);
     Task Update(Address address);
+    Task Delete(Address address);
 }

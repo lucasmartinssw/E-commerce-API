@@ -40,4 +40,9 @@ public class AddressRepository : IAddressRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task Delete(Address address)
+    {
+        _context.Addresses.Remove(address);
+        await _context.SaveChangesAsync();
+    }
 }
