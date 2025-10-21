@@ -1,5 +1,4 @@
-﻿// Ecommerce.Application/UseCases/User/Register/RegisterUserUseCase.cs
-using Ecommerce.Application.Security.Cryptography;
+﻿using Ecommerce.Application.Security.Cryptography;
 using Ecommerce.Application.Security.Token;
 using Ecommerce.Communication.Requests;
 using Ecommerce.Communication.Responses;

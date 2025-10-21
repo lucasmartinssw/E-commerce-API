@@ -9,4 +9,5 @@ public interface IUserRepository
     Task<bool> ExistsUserWithEmail(string email);
     Task<User>GetByEmail(string email);
     Task<List<User>> GetAll();
+    Task Update(User user);
 }

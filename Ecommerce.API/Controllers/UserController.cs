@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Application.UseCases.UserUseCase.Login;
 using Ecommerce.Application.UseCases.UserUseCase.Register;
-using Ecommerce.Application.UseCases.UserUseCase.GetProfile; 
+using Ecommerce.Application.UseCases.UserUseCase.GetProfile;
+using Ecommerce.Application.UseCases.UserUseCase.UpdateProfile; 
 using Ecommerce.Communication.Requests;
 using Ecommerce.Communication.Responses;
 using Ecommerce.Exceptions;
@@ -64,5 +65,18 @@ public class UserController : ControllerBase
         var userEmail = User.FindFirstValue(ClaimTypes.Email);
         var response = await useCase.Execute(userEmail!);
         return Ok(response);
+    }
+
+    [HttpPut("me")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdateMyProfile(
+        [FromServices] UpdateUserProfileUseCase useCase,
+        [FromBody] RequestUpdateUserProfileJson request)
+    {
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+
+        await useCase.Execute(userEmail!, request);
+        return NoContent();
     }
 }

@@ -34,5 +34,9 @@ public class UserRepository : IUserRepository
     {
         return await _context.Users.AsNoTracking().ToListAsync();
     }
-
+    public async Task Update(User user)
+    {
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+    }
 }
