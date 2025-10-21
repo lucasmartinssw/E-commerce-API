@@ -75,4 +75,9 @@ public class ProductRepository : IProductRepository
             TotalCount = totalCount
         };
     }
+    public async Task<Product?> GetById(long id)
+    {
+        return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+    }
+
 }

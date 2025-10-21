@@ -12,4 +12,5 @@ public interface IProductRepository {
         decimal? maxPrice,
         string? searchTerm
     );
+    Task<Product?> GetById(long id);
 }

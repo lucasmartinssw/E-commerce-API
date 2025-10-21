@@ -22,6 +22,8 @@ public class EcommerceDbContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<Payment> Payments { get; set; }
+    public DbSet<Cart> Carts { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -83,6 +85,20 @@ public class EcommerceDbContext : DbContext
                 .HasConversion<string>()
                 .HasDefaultValue(PaymentStatusType.pending);
         });
+
+        modelBuilder.Entity<User>()
+        .HasOne(u => u.Cart)
+        .WithOne(c => c.User)
+        .HasForeignKey<Cart>(c => c.UserId);
+
+        
+        modelBuilder.Entity<Cart>()
+            .HasMany(c => c.Items)
+            .WithOne(ci => ci.Cart)
+            .HasForeignKey(ci => ci.CartId);
+
+        modelBuilder.Entity<CartItem>()
+            .HasIndex(ci => new { ci.CartId, ci.ProductId }).IsUnique();
 
     }
 

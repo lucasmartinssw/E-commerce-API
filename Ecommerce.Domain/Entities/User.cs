@@ -13,5 +13,6 @@ namespace Ecommerce.Domain.Entities
         public UserRoleType Role { get; set; } = UserRoleType.customer;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public Cart? Cart { get; set; }
     }
 }

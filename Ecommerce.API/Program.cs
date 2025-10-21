@@ -17,6 +17,7 @@ using Ecommerce.Application.UseCases.Addresses.GetAll;
 using Ecommerce.Application.UseCases.Products.GetAllPaged;
 using Ecommerce.Application.Services.ViaCep;
 using Ecommerce.Application.UseCases.Addresses.AddByCep;
+using Ecommerce.Application.UseCases.Carts;
 using Ecommerce.Domain.Repositories;
 using Ecommerce.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -53,12 +54,15 @@ builder.Services.AddScoped<UpdateCategoryUseCase>();
 builder.Services.AddScoped<GetAllPagedProductsUseCase>();
 builder.Services.AddScoped<GetUserProfileUseCase>();
 builder.Services.AddScoped<ChangePasswordUseCase>();
-builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<AddAddressByCepUseCase>();
 builder.Services.AddScoped<DeleteAddressUseCase>();
+builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
 builder.Services.AddScoped<ViaCepService>();
 builder.Services.AddScoped<GetAllAddressesUseCase>();
 builder.Services.AddScoped<UpdateAddressUseCase>();
+builder.Services.AddScoped<AddCartItemUseCase>();
 
 
 // Configurações da API (Controllers e Swagger)
