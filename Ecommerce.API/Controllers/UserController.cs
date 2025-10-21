@@ -2,7 +2,10 @@
 using Ecommerce.Application.UseCases.UserUseCase.GetProfile;
 using Ecommerce.Application.UseCases.UserUseCase.Login;
 using Ecommerce.Application.UseCases.UserUseCase.Register;
-using Ecommerce.Application.UseCases.UserUseCase.UpdateProfile; 
+using Ecommerce.Application.UseCases.UserUseCase.UpdateProfile;
+using Ecommerce.Application.UseCases.Addresses.AddByCep;
+using Ecommerce.Application.UseCases.Addresses.GetAll;
+using Ecommerce.Application.UseCases.Addresses.Update;
 using Ecommerce.Communication.Requests;
 using Ecommerce.Communication.Responses;
 using Ecommerce.Exceptions;
@@ -91,6 +94,52 @@ public class UserController : ControllerBase
         
         var userEmail = User.FindFirstValue(ClaimTypes.Email);
         await useCase.Execute(userEmail!, request);
+
+        return NoContent();
+    }
+
+    [HttpPost("me/addresses/by-cep")]
+    [ProducesResponseType(typeof(ResponseAddressJson), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> AddMyAddressByCep(
+    [FromServices] AddAddressByCepUseCase useCase,
+    [FromBody] RequestAddAddressByCepJson request)
+    {
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+
+        var response = await useCase.Execute(userEmail!, request);
+
+        return Created($"/api/user/me/addresses/{response.Id}", response);
+    }
+
+    [HttpGet("me/addresses")] 
+    [ProducesResponseType(typeof(ResponseAllAddressesJson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetMyAddresses(
+        [FromServices] GetAllAddressesUseCase useCase)
+    {
+        
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+
+       
+        var response = await useCase.Execute(userEmail!);
+
+        return Ok(response);
+    }
+
+    [HttpPut("me/addresses/{id:long}")] 
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)] 
+    public async Task<IActionResult> UpdateMyAddress(
+        [FromServices] UpdateAddressUseCase useCase,
+        [FromRoute] long id, 
+        [FromBody] RequestAddAddressJson request) 
+    {
+        
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+
+        
+        await useCase.Execute(userEmail!, id, request);
 
         return NoContent();
     }

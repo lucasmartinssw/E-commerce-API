@@ -30,13 +30,21 @@ public class UserRepository : IUserRepository
         return await _context.Users.AsNoTracking().FirstOrDefaultAsync(user => user.Email.Equals(email));
     }
 
-    public async Task<List<User>> GetAll()
-    {
-        return await _context.Users.AsNoTracking().ToListAsync();
-    }
     public async Task Update(User user)
     {
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
+    }
+    public async Task<List<User>> GetAll()
+    {
+        return await _context.Users.AsNoTracking().ToListAsync();
+    }
+
+    public async Task<List<Address>> GetAllByUserId(long userId)
+    {
+        return await _context.Addresses
+            .AsNoTracking()
+            .Where(a => a.UserId == userId)
+            .ToListAsync();
     }
 }

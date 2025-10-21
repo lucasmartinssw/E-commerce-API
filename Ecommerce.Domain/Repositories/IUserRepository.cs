@@ -1,5 +1,5 @@
 ﻿using Ecommerce.Domain.Entities;
-
+using System.Collections.Generic;
 namespace Ecommerce.Domain.Repositories;
 
 public interface IUserRepository
@@ -10,4 +10,5 @@ public interface IUserRepository
     Task<User>GetByEmail(string email);
     Task<List<User>> GetAll();
     Task Update(User user);
+    
 }

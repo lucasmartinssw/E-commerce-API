@@ -8,10 +8,14 @@ using Ecommerce.Application.UseCases.UserUseCase.GetProfile;
 using Ecommerce.Application.UseCases.UserUseCase.ChangePassword;
 using Ecommerce.Application.UseCases.Categories.Create;
 using Ecommerce.Application.UseCases.Categories.GetAll;
+using Ecommerce.Application.UseCases.Addresses.Update;
 using Ecommerce.Application.UseCases.Categories.Delete;
 using Ecommerce.Application.UseCases.Categories.Update;
 using Ecommerce.Application.UseCases.UserUseCase.UpdateProfile;
+using Ecommerce.Application.UseCases.Addresses.GetAll;
 using Ecommerce.Application.UseCases.Products.GetAllPaged;
+using Ecommerce.Application.Services.ViaCep;
+using Ecommerce.Application.UseCases.Addresses.AddByCep;
 using Ecommerce.Domain.Repositories;
 using Ecommerce.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,7 +37,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>(); 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
-// Configurações da Aplicação (Casos de Uso e Segurança)
+// Configurações da Aplicação (Casos de Uso, Segurança e Services)
+builder.Services.AddScoped<ViaCepService>();
 builder.Services.AddSingleton<JwtTokenGenerator>();
 builder.Services.AddScoped<RegisterUserUseCase>();
 builder.Services.AddScoped<LoginUseCase>();
@@ -47,10 +52,16 @@ builder.Services.AddScoped<UpdateCategoryUseCase>();
 builder.Services.AddScoped<GetAllPagedProductsUseCase>();
 builder.Services.AddScoped<GetUserProfileUseCase>();
 builder.Services.AddScoped<ChangePasswordUseCase>();
+builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+builder.Services.AddScoped<AddAddressByCepUseCase>();
+builder.Services.AddScoped<ViaCepService>();
+builder.Services.AddScoped<GetAllAddressesUseCase>();
+builder.Services.AddScoped<UpdateAddressUseCase>();
 
 
 // Configurações da API (Controllers e Swagger)
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
