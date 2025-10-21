@@ -1,10 +1,12 @@
 ﻿using Ecommerce.Application.UseCases.UserUseCase.Login;
 using Ecommerce.Application.UseCases.UserUseCase.Register;
+using Ecommerce.Application.UseCases.UserUseCase.GetProfile; 
 using Ecommerce.Communication.Requests;
 using Ecommerce.Communication.Responses;
 using Ecommerce.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Ecommerce.API.Controllers;
 
@@ -52,5 +54,15 @@ public class UserController : ControllerBase
     {
         // O cliente que deve excluir o token após receber esta resposta.
         return Ok(new { message = "Ok, entendi. Agora se vire e apague o token aí do seu lado." });
+    }
+
+    [HttpGet("me")]
+    [ProducesResponseType(typeof(ResponseUserJson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetMyProfile(
+        [FromServices] GetUserProfileUseCase useCase)
+    {
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+        var response = await useCase.Execute(userEmail!);
+        return Ok(response);
     }
 }
