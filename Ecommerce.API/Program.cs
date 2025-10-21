@@ -5,6 +5,7 @@ using Ecommerce.Application.UseCases.UserUseCase.Login;
 using Ecommerce.Application.UseCases.UserUseCase.Register;
 using Ecommerce.Application.UseCases.UserUseCase.GetAll;
 using Ecommerce.Application.UseCases.UserUseCase.GetProfile;
+using Ecommerce.Application.UseCases.UserUseCase.ChangePassword;
 using Ecommerce.Application.UseCases.Categories.Create;
 using Ecommerce.Application.UseCases.Categories.GetAll;
 using Ecommerce.Application.UseCases.Categories.Delete;
@@ -45,6 +46,7 @@ builder.Services.AddScoped<DeleteCategoryUseCase>();
 builder.Services.AddScoped<UpdateCategoryUseCase>();
 builder.Services.AddScoped<GetAllPagedProductsUseCase>();
 builder.Services.AddScoped<GetUserProfileUseCase>();
+builder.Services.AddScoped<ChangePasswordUseCase>();
 
 
 // Configurações da API (Controllers e Swagger)

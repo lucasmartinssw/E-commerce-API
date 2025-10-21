@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Communication.Requests;
 using Ecommerce.Domain.Repositories;
+using Ecommerce.Exceptions;
 using Ecommerce.Exceptions.ExceptionsBase;
 using System;
 using System.Collections.Generic;
@@ -27,12 +28,11 @@ public class UpdateUserProfileUseCase
             throw new ValidationErrorsException(new List<string> { "Usuário não encontrado." });
         }
 
-        // 3. Atualizar as propriedades da entidade
         user.Name = request.Name;
         user.Telephone = request.Telephone;
-        user.UpdatedAt = DateTime.UtcNow; // Atualiza o timestamp (como no schema)
+        user.UpdatedAt = DateTime.UtcNow; 
 
-        // 4. Salvar no banco
+        
         await _repository.Update(user);
     }
 

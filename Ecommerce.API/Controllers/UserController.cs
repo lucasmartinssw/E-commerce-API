@@ -1,6 +1,7 @@
-﻿using Ecommerce.Application.UseCases.UserUseCase.Login;
-using Ecommerce.Application.UseCases.UserUseCase.Register;
+﻿using Ecommerce.Application.UseCases.UserUseCase.ChangePassword;
 using Ecommerce.Application.UseCases.UserUseCase.GetProfile;
+using Ecommerce.Application.UseCases.UserUseCase.Login;
+using Ecommerce.Application.UseCases.UserUseCase.Register;
 using Ecommerce.Application.UseCases.UserUseCase.UpdateProfile; 
 using Ecommerce.Communication.Requests;
 using Ecommerce.Communication.Responses;
@@ -77,6 +78,20 @@ public class UserController : ControllerBase
         var userEmail = User.FindFirstValue(ClaimTypes.Email);
 
         await useCase.Execute(userEmail!, request);
+        return NoContent();
+    }
+
+    [HttpPut("me/password")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ChangeMyPassword(
+        [FromServices] ChangePasswordUseCase useCase,
+        [FromBody] RequestChangePasswordJson request)
+    {
+        
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+        await useCase.Execute(userEmail!, request);
+
         return NoContent();
     }
 }
