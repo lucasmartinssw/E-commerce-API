@@ -15,4 +15,8 @@ public interface IProductRepository {
     );
     Task<Product?> GetById(long id);
     Task UpdateRange(List<Product> products);
+
+    Task<Product?> GetByIdTracked(long id); 
+    Task Update(Product product);
+    Task Delete(Product product);
 }

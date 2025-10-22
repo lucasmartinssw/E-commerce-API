@@ -83,4 +83,21 @@ public class ProductRepository : IProductRepository
     {
         _context.Products.UpdateRange(products);
     }
+
+    public async Task<Product?> GetByIdTracked(long id)
+    {
+        return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+    }
+
+    public async Task Update(Product product)
+    {
+        _context.Products.Update(product); 
+        await _context.SaveChangesAsync();     
+    }
+
+    public async Task Delete(Product product)
+    {
+        _context.Products.Remove(product); 
+        await _context.SaveChangesAsync(); 
+    }
 }
