@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Domain.Entities;
 using Ecommerce.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 namespace Ecommerce.Infrastructure.DataAccess;
 public class OrderRepository : IOrderRepository
 {
@@ -10,5 +11,13 @@ public class OrderRepository : IOrderRepository
     {
         await _context.Orders.AddAsync(order);
   
+    }
+    public async Task<List<Order>> GetAllByUserId(long userId)
+    {
+        return await _context.Orders
+            .AsNoTracking()
+            .Where(o => o.UserId == userId)
+            .OrderByDescending(o => o.OrderDate)
+            .ToListAsync();
     }
 }

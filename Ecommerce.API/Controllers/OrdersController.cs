@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Application.UseCases.Orders.Checkout;
+using Ecommerce.Application.UseCases.Orders.GetHistory;
 using Ecommerce.Communication.Requests;
 using Ecommerce.Communication.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -25,5 +26,15 @@ public class OrdersController : ControllerBase
         var response = await useCase.Execute(userEmail!, request);
 
         return Created($"/api/orders/{response.Id}", response);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(ResponseOrderHistoryJson), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetOrderHistory(
+        [FromServices] GetOrderHistoryUseCase useCase)
+    {
+        var userEmail = User.FindFirstValue(ClaimTypes.Email);
+        var response = await useCase.Execute(userEmail!);
+        return Ok(response);
     }
 }

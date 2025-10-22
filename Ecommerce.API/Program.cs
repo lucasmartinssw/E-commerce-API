@@ -14,6 +14,7 @@ using Ecommerce.Application.UseCases.Categories.Delete;
 using Ecommerce.Application.UseCases.Categories.GetAll;
 using Ecommerce.Application.UseCases.Categories.Update;
 using Ecommerce.Application.UseCases.Orders.Checkout;
+using Ecommerce.Application.UseCases.Orders.GetHistory;
 using Ecommerce.Application.UseCases.Products.Create;
 using Ecommerce.Application.UseCases.Products.GetAllPaged;
 using Ecommerce.Application.UseCases.UserUseCase.ChangePassword;
@@ -73,6 +74,7 @@ builder.Services.AddScoped<DeleteCartItemUseCase>();
 builder.Services.AddScoped<ClearCartUseCase>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<CheckoutUseCase>();
+builder.Services.AddScoped<GetOrderHistoryUseCase>();
 
 
 // Configurações da API (Controllers e Swagger)
