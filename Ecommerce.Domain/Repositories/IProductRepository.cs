@@ -1,5 +1,6 @@
-﻿using Ecommerce.Domain.Entities;
-using Ecommerce.Domain.Common;
+﻿using Ecommerce.Domain.Common;
+using Ecommerce.Domain.Entities;
+using System.Threading.Tasks;
 namespace Ecommerce.Domain.Repositories;
 public interface IProductRepository {
     Task Add(Product product);
@@ -13,4 +14,5 @@ public interface IProductRepository {
         string? searchTerm
     );
     Task<Product?> GetById(long id);
+    Task UpdateRange(List<Product> products);
 }
