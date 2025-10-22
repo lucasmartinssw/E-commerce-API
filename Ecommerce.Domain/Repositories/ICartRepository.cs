@@ -4,4 +4,5 @@ public interface ICartRepository
 {
     Task<Cart?> GetByUserId(long userId);
     Task Add(Cart cart);
+    Task ClearItems(long cartId);
 }

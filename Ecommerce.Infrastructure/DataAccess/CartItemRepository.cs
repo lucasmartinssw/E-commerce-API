@@ -2,6 +2,7 @@
 using Ecommerce.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 namespace Ecommerce.Infrastructure.DataAccess;
+using System.Threading.Tasks;
 
 public class CartItemRepository : ICartItemRepository
 {
@@ -21,6 +22,18 @@ public class CartItemRepository : ICartItemRepository
     public async Task Update(CartItem item)
     {
         _context.CartItems.Update(item);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<CartItem?> GetById(long id)
+    {
+        return await _context.CartItems
+            .Include(ci => ci.Cart)
+            .FirstOrDefaultAsync(ci => ci.Id == id);
+    }
+    public async Task Delete(CartItem item)
+    {
+        _context.CartItems.Remove(item);
         await _context.SaveChangesAsync();
     }
 }
