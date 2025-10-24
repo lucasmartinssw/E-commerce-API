@@ -73,8 +73,8 @@ The solution is organized into the following layers, adhering to the Clean Archi
 
 2.  **Clone the Repository:**
     ```bash
-    git clone <your-repository-url>
-    cd <repository-folder>
+    git clone https://github.com/lucasmartinssw/E-commerce-API
+    cd E-commerce-API
     ```
 
 3.  **Database Setup:**
